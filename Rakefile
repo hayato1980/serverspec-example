@@ -1,31 +1,22 @@
 require 'rake'
 require 'rspec/core/rake_task'
  
-hosts = [
-  {
-    :name  => 'sample.example.jp',
-    :roles => %w( base ),
-  },
-]
- 
-hosts = hosts.map do |host|
-  {
-    :name       => host[:name],
-    :short_name => host[:name].split('.').first,
-    :roles      => host[:roles],
+hosts = {
+  'sample.example.com' => {
+    :roles => %w( base )
   }
-end
+}
  
 desc "Run serverspec to all hosts"
 task :serverspec => 'serverspec:all'
  
 namespace :serverspec do
-  task :all => hosts.map {|h| 'serverspec:' + h[:short_name] }
-  hosts.each do |host|
-    desc "Run serverspec to #{host[:name]}"
-    RSpec::Core::RakeTask.new(host[:short_name].to_sym) do |t|
-      ENV['TARGET_HOST'] = host[:name]
-      t.pattern = 'spec/{' + host[:roles].join(',') + '}/*_spec.rb'
+  task :all => hosts.keys.map {|k| 'serverspec:' + k.split('.').first }
+  hosts.keys.each do |host|
+    desc "Run serverspec to #{host}"
+    RSpec::Core::RakeTask.new(host.split('.').first.to_sym) do |t|
+      ENV['TARGET_HOST'] = host
+      t.pattern = 'spec/{' + hosts[host][:roles].join(',') + '}/*_spec.rb'
     end
   end
 end
