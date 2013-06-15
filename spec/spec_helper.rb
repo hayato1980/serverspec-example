@@ -6,6 +6,8 @@ include Serverspec::Helper::Ssh
 include Serverspec::Helper::DetectOS
 
 RSpec.configure do |c|
+  c.path = '/sbin:/usr/sbin'
+
   if ENV['ASK_SUDO_PASSWORD']
     require 'highline/import'
     c.sudo_password = ask("Enter sudo password: ") { |q| q.echo = false }
