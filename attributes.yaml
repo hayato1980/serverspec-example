@@ -1,3 +1,5 @@
 sample.example.com:
   :roles:
     - base
+  :hostname:
+    - sample.example.com
