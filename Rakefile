@@ -1,11 +1,8 @@
 require 'rake'
 require 'rspec/core/rake_task'
+require 'yaml'
  
-hosts = {
-  'sample.example.com' => {
-    :roles => %w( base )
-  }
-}
+hosts = YAML.load_file('attributes.yaml')
  
 desc "Run serverspec to all hosts"
 task :serverspec => 'serverspec:all'
