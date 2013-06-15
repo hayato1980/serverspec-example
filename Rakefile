@@ -11,7 +11,7 @@ hosts = [
 hosts = hosts.map do |host|
   {
     :name       => host[:name],
-    :short_name => host[:name].split('.')[0],
+    :short_name => host[:name].split('.').first,
     :roles      => host[:roles],
   }
 end
