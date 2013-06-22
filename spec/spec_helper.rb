@@ -22,6 +22,11 @@ RSpec.configure do |c|
   attr_set hosts[c.host]
   options = Net::SSH::Config.for(c.host)
   user    = options[:user] || Etc.getlogin
+  if ENV['ASK_LOGIN_PASSWORD']
+    options[:password] = ask("\nEnter login password: ") { |q| q.echo = false }
+  elsif ENV['LOGIN_PASSWORD']
+    options[:password] = ENV['LOGIN_PASSWORD']
+  end
   c.ssh   = Net::SSH.start(c.host, user, options)
   c.os    = backend(Serverspec::Commands::Base).check_os
 
